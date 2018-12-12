@@ -39,14 +39,18 @@
 #include "clock_config.h"
 #include "MKL25Z4.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
+
+/* APPLICATION INCLUDES */
+#include "adc_driver.h"
+
 
 /* TODO: insert other definitions and declarations here. */
 
 /*
  * @brief   Application entry point.
  */
-int main(void) {
+int main(void)
+{
 
   	/* Init board hardware. */
     BOARD_InitBootPins();
@@ -57,11 +61,24 @@ int main(void) {
 
     PRINTF("Hello World\n");
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
+    adc_init_config fig = ADC_INIT_CONFIG_DEFAULT;
+    fig.channel = ADC_CHAN_DAD0;
+    fig.bits = ADC_BITS_16BIT_DIFF;
+    fig.continuous = ADC_CONTINUOUS_CONTINUOUS;
+    fig.avg_samps = ADC_SAMP_AVG_16;
+    fig.sample_cycle_add = ADC_SMP_CYCLE_ADD_6;
+    fig.port = PORTE;
+    fig.pin_1 = 20;
+    fig.pin_2 = 21;
+//    fig.dma_mode = ADC_DMA_ENABLED;
+
+    adc_init(&fig);
+
+    while(1)
+    {
+    	uint16_t reading = adc_blocking_result(ADC0, fig.mux, fig.bits);
+    	printf("%d\n", reading);
     }
+
     return 0 ;
 }

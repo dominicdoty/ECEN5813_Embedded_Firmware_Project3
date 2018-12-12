@@ -79,8 +79,9 @@
 									<listOptionValue builtIn="false" value="DEBUG"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.237537045" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol"/>
-								<option id="gnu.c.compiler.option.include.paths.161262866" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.161262866" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../board"/>
+									<listOptionValue builtIn="false" value="../include"/>
 									<listOptionValue builtIn="false" value="../source"/>
 									<listOptionValue builtIn="false" value="../"/>
 									<listOptionValue builtIn="false" value="../drivers"/>
@@ -89,7 +90,7 @@
 									<listOptionValue builtIn="false" value="../startup"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.1116456882" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files"/>
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.915091648" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level"/>
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.915091648" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.optimization.flags.1588291291" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.1568097371" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level"/>
 								<option id="gnu.c.compiler.option.debugging.other.1991040822" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other"/>
@@ -130,6 +131,7 @@
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../startup"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DMA_Project/include}&quot;"/>
 								</option>
 								<option id="gnu.both.asm.option.warnings.nowarn.851376062" name="Suppress warnings (-W)" superClass="gnu.both.asm.option.warnings.nowarn"/>
 								<option id="gnu.both.asm.option.version.2105102200" name="Announce version (-v)" superClass="gnu.both.asm.option.version"/>
@@ -194,11 +196,11 @@
 							</tool>
 							<tool id="com.crt.advproject.link.exe.debug.1020064028" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug">
 								<option id="com.crt.advproject.link.thumb.897942970" name="Thumb mode" superClass="com.crt.advproject.link.thumb" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.memory.load.image.2003243009" name="Plain load image" superClass="com.crt.advproject.link.memory.load.image" value="" valueType="string"/>
+								<option id="com.crt.advproject.link.memory.load.image.2003243009" name="Plain load image" superClass="com.crt.advproject.link.memory.load.image" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.memory.heapAndStack.277221072" name="Heap and Stack options" superClass="com.crt.advproject.link.memory.heapAndStack" value="&amp;Heap:Default;Post Data;Default&amp;Stack:Default;End;Default" valueType="string"/>
-								<option id="com.crt.advproject.link.memory.data.618413055" name="Global data placement" superClass="com.crt.advproject.link.memory.data" value="" valueType="string"/>
-								<option id="com.crt.advproject.link.memory.sections.1264628869" name="Extra linker script input sections" superClass="com.crt.advproject.link.memory.sections" valueType="stringList"/>
-								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.2140015202" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" valueType="userObjs"/>
+								<option id="com.crt.advproject.link.memory.data.618413055" name="Global data placement" superClass="com.crt.advproject.link.memory.data" useByScannerDiscovery="false" value="" valueType="string"/>
+								<option id="com.crt.advproject.link.memory.sections.1264628869" name="Extra linker script input sections" superClass="com.crt.advproject.link.memory.sections" useByScannerDiscovery="false" valueType="stringList"/>
+								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.2140015202" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" useByScannerDiscovery="false" valueType="userObjs"/>
 								<option id="com.crt.advproject.link.arch.2060160535" name="Architecture" superClass="com.crt.advproject.link.arch" value="com.crt.advproject.link.target.cm0plus" valueType="enumerated"/>
 								<option id="gnu.c.link.option.nostart.1843768577" name="Do not use standard start files (-nostartfiles)" superClass="gnu.c.link.option.nostart"/>
 								<option id="gnu.c.link.option.nodeflibs.127293104" name="Do not use default libraries (-nodefaultlibs)" superClass="gnu.c.link.option.nodeflibs"/>
@@ -234,7 +236,7 @@
 								<option id="com.crt.advproject.link.gcc.nanofloat.728963939" name="Enable printf float " superClass="com.crt.advproject.link.gcc.nanofloat"/>
 								<option id="com.crt.advproject.link.gcc.nanofloat.scanf.1929513277" name="Enable scanf float " superClass="com.crt.advproject.link.gcc.nanofloat.scanf"/>
 								<option id="com.crt.advproject.link.toram.1627642791" name="Link application to RAM" superClass="com.crt.advproject.link.toram"/>
-								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.961543835" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" valueType="enumerated"/>
+								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.961543835" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.stackOffset.1436588333" name="Stack offset" superClass="com.crt.advproject.link.stackOffset"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.773934808" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.589354234" name="Multicore master" superClass="com.crt.advproject.link.gcc.multicore.master"/>
@@ -249,12 +251,13 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="source"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="utilities"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="board"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="include"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="source"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="startup"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -344,6 +347,7 @@
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../startup"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DMA_Project/include}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.1654607731" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files"/>
 								<option id="gnu.c.compiler.option.optimization.flags.626511692" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-fno-common" valueType="string"/>
@@ -385,6 +389,7 @@
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../startup"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DMA_Project/include}&quot;"/>
 								</option>
 								<option id="gnu.both.asm.option.warnings.nowarn.387385993" name="Suppress warnings (-W)" superClass="gnu.both.asm.option.warnings.nowarn"/>
 								<option id="gnu.both.asm.option.version.1679800407" name="Announce version (-v)" superClass="gnu.both.asm.option.version"/>
@@ -617,4 +622,7 @@
 		<package>MKL25Z128VFM4</package>
 		<core>cm0plus</core>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
