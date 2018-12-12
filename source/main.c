@@ -43,9 +43,16 @@
 /* APPLICATION INCLUDES */
 #include "adc_driver.h"
 #include "dma_driver.h"
+#include "peak_detect.h"
 
 
 /* DEFINES AND TYPEDEFS */
+#define PRINT_PRETTY_LINES	0
+#define PRINT_TEXT_OUT		1
+#if PRINT_PRETTY_LINES && PRINT_TEXT_OUT
+#warning Printing Lines and Text is very slow and may break the program
+#endif
+
 #define BUFF_DOUBLE_SIZE	128
 #define BUFF_ITEM_BYTES		4
 #define BUFF_DOUBLE_BYTES	(BUFF_DOUBLE_SIZE*BUFF_ITEM_BYTES)
@@ -60,7 +67,7 @@
 
 /* GLOBALS */
 volatile uint32_t buffer[BUFF_DOUBLE_SIZE];
-volatile uint8_t active_DMA_buffer = 0;
+volatile bool active_DMA_buffer = 0;
 volatile void* const buffer_ptr_lut[] = {&buffer[0], &buffer[BUFF_HALF_SIZE]};
 
 
@@ -109,8 +116,8 @@ int main(void)
     adc_fig.channel = ADC_CHAN_DAD0;
     adc_fig.bits = ADC_BITS_16BIT_DIFF;
     adc_fig.continuous = ADC_CONTINUOUS_CONTINUOUS;
-    adc_fig.avg_samps = ADC_SAMP_AVG_16;
-    adc_fig.sample_cycle_add = ADC_SMP_CYCLE_ADD_6;
+    adc_fig.avg_samps = ADC_SAMP_AVG_4;
+    adc_fig.sample_cycle_add = ADC_SMP_CYCLE_ADD_HS_22;
     adc_fig.port = PORTE;
     adc_fig.pin_1 = 20;
     adc_fig.pin_2 = 21;
@@ -128,7 +135,25 @@ int main(void)
     // Enable DMA Mux
     dma_mux_channel_enable(dma_mux_fig_chan0.dma_mux, dma_mux_fig_chan0.channel, true);
 
-    while(1);
+    bool last_active_DMA_buffer = active_DMA_buffer;
+    uint32_t output_adc_counts = 0;
+    int32_t output_dbfs = 0;
+
+    while(1)
+    {
+    	if(active_DMA_buffer != last_active_DMA_buffer)
+    	{
+			output_adc_counts = peak_output(buffer_ptr_lut[last_active_DMA_buffer], BUFF_HALF_SIZE, 1);
+			output_dbfs = dbfs_output(output_adc_counts);
+
+			#if PRINT_TEXT_OUT
+				printf("ADC:%d - millidBFS:%d\n", output_adc_counts, output_dbfs);
+			#endif
+			#if PRINT_PRETTY_LINES
+				pretty_print(output_dbfs, 8);
+			#endif
+    	}
+    }
 
     return 0 ;
 }

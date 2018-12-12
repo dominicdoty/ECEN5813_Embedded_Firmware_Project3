@@ -90,7 +90,7 @@ dma_error dma_init(dma_init_config* config)
 // Used to restart a DMA transfer on an already configured DMA Channel (resets peripheral_en)
 void dma_transfer_restart(DMA_Type* dma, dma_channel channel, volatile void* buffer_ptr, uint32_t byte_count)
 {
-	dma->DMA[channel].DAR = buffer_ptr;
+	dma->DMA[channel].DAR = (uint32_t)buffer_ptr;
 	dma->DMA[channel].DSR_BCR |= DMA_DSR_BCR_BCR(byte_count);
 	dma->DMA[channel].DCR |= DMA_DCR_ERQ(true);
 }
