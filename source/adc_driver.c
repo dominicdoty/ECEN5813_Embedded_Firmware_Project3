@@ -22,7 +22,6 @@ adc_error adc_init(adc_init_config* config)
 {
 	// Init Variables
 	adc_error ret = ADC_ERROR_SUCCESS;
-	ADC_Type* adc = config->adc;
 
 	// Check validity of config struct
 	if(adc_null_ptrs(config))
@@ -34,12 +33,15 @@ adc_error adc_init(adc_init_config* config)
 	{
 		ret = ADC_ERROR_CHANNEL_MODE_INCOMPATIBLE;
 	}
-	else if(adc != ADC0)
+	else if(config->adc != ADC0)
 	{
 		ret = ADC_ERROR_UNKNOWN_ADC;
 	}
 	else
 	{
+		// Easy Read Address
+		ADC_Type* adc = config->adc;
+
 		// GPIO Setup
 		clock_ip_name_t kclock = ((((uint32_t)(config->port)) >> 12) & 0xFU) + 0x10380000U;
 		CLOCK_EnableClock(kclock);

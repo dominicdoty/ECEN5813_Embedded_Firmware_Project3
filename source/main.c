@@ -42,16 +42,25 @@
 
 /* APPLICATION INCLUDES */
 #include "adc_driver.h"
+#include "dma_driver.h"
 
 
-/* TODO: insert other definitions and declarations here. */
+/* DEFINES AND TYPEDEFS */
+#define BUFF_DOUBLE_SIZE	128
+#define BUFF_ITEM_BYTES		4
+#define BUFF_HALF_SIZE		(BUFF_DOUBLE_SIZE/2)
+#define BUFF_HALF_BYTES		(BUFF_HALF_SIZE*BUFF_ITEM_BYTES)
+
+/* GLOBALS */
+volatile bool dma_in_buffer_0 = true;
+volatile uint32_t buffer[BUFF_DOUBLE_SIZE];
+
 
 /*
  * @brief   Application entry point.
  */
 int main(void)
 {
-
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -59,26 +68,73 @@ int main(void)
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
+    PRINTF("START\n");
 
-    adc_init_config fig = ADC_INIT_CONFIG_DEFAULT;
-    fig.channel = ADC_CHAN_DAD0;
-    fig.bits = ADC_BITS_16BIT_DIFF;
-    fig.continuous = ADC_CONTINUOUS_CONTINUOUS;
-    fig.avg_samps = ADC_SAMP_AVG_16;
-    fig.sample_cycle_add = ADC_SMP_CYCLE_ADD_6;
-    fig.port = PORTE;
-    fig.pin_1 = 20;
-    fig.pin_2 = 21;
-//    fig.dma_mode = ADC_DMA_ENABLED;
+    // SETUP DMA
+    dma_init_config dma_fig_chan0 = DMA_INIT_CONFIG_DEFAULT;
+    dma_fig_chan0.dma = DMA0;
+    dma_fig_chan0.src_addr = &(ADC0->R[ADC_MUX_A]);
+    dma_fig_chan0.dest_addr = &buffer[0];
+    dma_fig_chan0.byte_count = BUFF_HALF_BYTES;
+    dma_fig_chan0.interrupt = true;
+    dma_fig_chan0.peripheral_en = true;
+    dma_fig_chan0.steal_cycles = true;
+    dma_fig_chan0.dest_inc = true;
+    dma_fig_chan0.auto_disable_req = true;
 
-    adc_init(&fig);
+    dma_init_config dma_fig_chan1 = dma_fig_chan0;
+    dma_fig_chan1.channel = DMA_CHANNEL_1;
+    dma_fig_chan1.dest_addr = &buffer[BUFF_HALF_SIZE];
+    dma_fig_chan1.peripheral_en = true;
 
-    while(1)
+    dma_error dma_0_err = dma_init(&dma_fig_chan0);
+    dma_error dma_1_err = dma_init(&dma_fig_chan1);
+
+    // SETUP DMAMUX
+    dma_mux_config dma_mux_fig_chan0 = DMA_MUX_CONFIG_DEFAULT;
+    dma_mux_fig_chan0.channel_enable = true;
+
+    dma_mux_config dma_mux_fig_chan1 = dma_mux_fig_chan0;
+    dma_mux_fig_chan1.channel = DMA_CHANNEL_1;
+
+    dma_error dma_mux_0_err = dma_mux_init(&dma_mux_fig_chan0);
+    dma_error dma_mux_1_err = dma_mux_init(&dma_mux_fig_chan1);
+
+    // SETUP ADC
+    adc_init_config adc_fig = ADC_INIT_CONFIG_DEFAULT;
+    adc_fig.channel = ADC_CHAN_DAD0;
+    adc_fig.bits = ADC_BITS_16BIT_DIFF;
+    adc_fig.continuous = ADC_CONTINUOUS_CONTINUOUS;
+    adc_fig.avg_samps = ADC_SAMP_AVG_16;
+    adc_fig.sample_cycle_add = ADC_SMP_CYCLE_ADD_6;
+    adc_fig.port = PORTE;
+    adc_fig.pin_1 = 20;
+    adc_fig.pin_2 = 21;
+    adc_fig.dma_mode = ADC_DMA_ENABLED;
+
+    adc_error adc_err = adc_init(&adc_fig);
+
+    if(	(dma_0_err != DMA_ERROR_SUCCESS)	|
+    	(dma_1_err != DMA_ERROR_SUCCESS)	|
+		(adc_err != ADC_ERROR_SUCCESS)		|
+		(dma_mux_0_err != DMA_ERROR_SUCCESS)|
+		(dma_mux_1_err != DMA_ERROR_SUCCESS))
     {
-    	uint16_t reading = adc_blocking_result(ADC0, fig.mux, fig.bits);
-    	printf("%d\n", reading);
+    	__asm__("BKPT");
     }
 
+    while(1);
+
     return 0 ;
+}
+
+void DMA0_DriverIRQHandler()
+{
+	//__asm__("BKPT");
+	// Disable Interrupts
+	// Turn on Pin
+	// Enable Other DMA
+	dma_in_buffer_0 = !dma_in_buffer_0;	// Switch DMA Buffer Flag
+	// Turn off Pin
+	// Enable Interrupts
 }

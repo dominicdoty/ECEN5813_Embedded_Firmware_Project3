@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../source/adc_driver.c \
+../source/dma_driver.c \
 ../source/main.c \
 ../source/mtb.c \
 ../source/semihost_hardfault.c 
 
 OBJS += \
 ./source/adc_driver.o \
+./source/dma_driver.o \
 ./source/main.o \
 ./source/mtb.o \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
 ./source/adc_driver.d \
+./source/dma_driver.d \
 ./source/main.d \
 ./source/mtb.d \
 ./source/semihost_hardfault.d 
