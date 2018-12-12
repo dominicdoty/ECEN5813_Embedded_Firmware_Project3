@@ -162,6 +162,10 @@ dma_error dma_init(dma_init_config* config);
 // DMA Mux Initialization
 dma_error dma_mux_init(dma_mux_config* config);
 
-// DMA Start
+// Enable or Disable a Mux Channel
+void dma_mux_channel_enable(DMAMUX_Type* dma_mux, dma_channel channel, bool enable);
+
+// Used to restart a DMA transfer on an already configured DMA Channel (resets peripheral_en)
+void dma_transfer_restart(DMA_Type* dma, dma_channel channel, volatile void* buffer_ptr, uint32_t byte_count);
 
 #endif /* DMA_DRIVER_H_ */

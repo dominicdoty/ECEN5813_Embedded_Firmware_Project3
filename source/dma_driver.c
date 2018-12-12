@@ -62,7 +62,7 @@ dma_error dma_init(dma_init_config* config)
 		dma->DMA[config->channel].DSR_BCR = DMA_DSR_BCR_BCR(config->byte_count);
 
 		// DMA Control Register
-		dma->DMA[config->channel].DCR = (DMA_DCR_EINT(config->interrupt))			|
+		dma->DMA[config->channel].DCR = (DMA_DCR_EINT(config->interrupt))	|
 								(DMA_DCR_ERQ(config->peripheral_en))		|
 								(DMA_DCR_CS(config->steal_cycles))			|
 								(DMA_DCR_AA(config->auto_align))			|
@@ -85,6 +85,14 @@ dma_error dma_init(dma_init_config* config)
 		}
 	}
 	return ret;
+}
+
+// Used to restart a DMA transfer on an already configured DMA Channel (resets peripheral_en)
+void dma_transfer_restart(DMA_Type* dma, dma_channel channel, volatile void* buffer_ptr, uint32_t byte_count)
+{
+	dma->DMA[channel].DAR = buffer_ptr;
+	dma->DMA[channel].DSR_BCR |= DMA_DSR_BCR_BCR(byte_count);
+	dma->DMA[channel].DCR |= DMA_DCR_ERQ(true);
 }
 
 dma_error dma_mux_init(dma_mux_config* config)
@@ -112,6 +120,19 @@ dma_error dma_mux_init(dma_mux_config* config)
 	}
 
 	return ret;
+}
+
+// Enable or Disable a Mux Channel
+void dma_mux_channel_enable(DMAMUX_Type* dma_mux, dma_channel channel, bool enable)
+{
+	if(enable)
+	{
+		dma_mux->CHCFG[channel] |= DMAMUX_CHCFG_ENBL_MASK;
+	}
+	else
+	{
+		dma_mux->CHCFG[channel] &= DMAMUX_CHCFG_ENBL_MASK;
+	}
 }
 
 /* STATIC FUNCTION DEFINITIONS */
