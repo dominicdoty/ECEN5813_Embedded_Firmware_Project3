@@ -1,0 +1,12 @@
+Part 2:
+	1. What is the behavior of the system when no input signal is applied?
+
+Part 3:
+	1. What source and destination DMA read and write size did you choose and why?
+
+Part 4:
+	1. What is the consequence of a lengthy or delayed interrupt service for the data retrieved by the DMA controller?
+
+Part 5:
+	1. What effect does changing the buffer size have on system processing efficiency?
+	2. What other effect(s) does changing the buffer size have on the system?

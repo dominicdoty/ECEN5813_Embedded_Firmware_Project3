@@ -47,14 +47,14 @@
 
 
 /* DEFINES AND TYPEDEFS */
-#define PRINT_PRETTY_LINES	0
+#define PRINT_PRETTY_LINES	1
 #define PRINT_TEXT_OUT		1
 #if PRINT_PRETTY_LINES && PRINT_TEXT_OUT
 #warning Printing Lines and Text is very slow and may break the program
 #endif
 
 #define BUFF_DOUBLE_SIZE	128
-#define BUFF_ITEM_BYTES		4
+#define BUFF_ITEM_BYTES		2
 #define BUFF_DOUBLE_BYTES	(BUFF_DOUBLE_SIZE*BUFF_ITEM_BYTES)
 #define BUFF_HALF_SIZE		(BUFF_DOUBLE_SIZE/2)
 #define BUFF_HALF_BYTES		(BUFF_HALF_SIZE*BUFF_ITEM_BYTES)
@@ -66,7 +66,7 @@
 #define RAND_GPIO_CLOCK		kCLOCK_PortE
 
 /* GLOBALS */
-volatile uint32_t buffer[BUFF_DOUBLE_SIZE];
+volatile int16_t buffer[BUFF_DOUBLE_SIZE];
 volatile bool active_DMA_buffer = 0;
 volatile void* const buffer_ptr_lut[] = {&buffer[0], &buffer[BUFF_HALF_SIZE]};
 
@@ -102,6 +102,8 @@ int main(void)
     dma_fig_chan0.src_addr = &(ADC0->R[ADC_MUX_A]);
     dma_fig_chan0.dest_addr = &buffer[0];
     dma_fig_chan0.byte_count = BUFF_HALF_BYTES;
+    dma_fig_chan0.src_size = DMA_SIZE_16;
+    dma_fig_chan0.dest_size = DMA_SIZE_16;
     dma_fig_chan0.interrupt = true;
     dma_fig_chan0.peripheral_en = true;
     dma_fig_chan0.steal_cycles = true;
@@ -136,8 +138,8 @@ int main(void)
     dma_mux_channel_enable(dma_mux_fig_chan0.dma_mux, dma_mux_fig_chan0.channel, true);
 
     bool last_active_DMA_buffer = active_DMA_buffer;
-    uint32_t output_adc_counts = 0;
-    int32_t output_dbfs = 0;
+    uint16_t output_adc_counts = 0;
+    uint16_t output_dbfs = 0;
 
     while(1)
     {
@@ -147,7 +149,9 @@ int main(void)
 			output_dbfs = dbfs_output(output_adc_counts);
 
 			#if PRINT_TEXT_OUT
-				printf("ADC:%d - millidBFS:%d\n", output_adc_counts, output_dbfs);
+			uint16_t out_whole = output_dbfs/100;
+			uint16_t out_decimal = output_dbfs - (out_whole * 100);
+				printf("ADC:%d - dBFS:-%d.%d\n", output_adc_counts, out_whole, out_decimal);
 			#endif
 			#if PRINT_PRETTY_LINES
 				pretty_print(output_dbfs, 8);
